@@ -1,0 +1,3 @@
+<FindBugsFilter>
+	<Bug pattern="SS_SHOULD_BE_STATIC" />
+</FindBugsFilter>

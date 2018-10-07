@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Default ruleset used by the CodeClimate Engine for Salesforce.com Apex" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+	<description>PMD default ruleset configuration</description>
+	<rule ref="category/java/bestpractices.xml">
+		<exclude name="JUnitTestsShouldIncludeAssert" />
+	</rule>
+	<rule ref="category/java/codestyle.xml">
+		<exclude name="ShortClassName" />
+		<exclude name="FieldDeclarationsShouldBeAtStartOfClass" />
+		<exclude name="AtLeastOneConstructor" />
+		<exclude name="DefaultPackage" />
+		<exclude name="CommentDefaultAccessModifier" />
+	</rule>
+	<rule ref="category/java/design.xml">
+		<exclude name="AvoidCatchingGenericException" />
+		<exclude name="AvoidRethrowingException" />
+		<exclude name="AvoidThrowingRawExceptionTypes" />
+		<exclude name="FinalFieldCouldBeStatic" />
+		<exclude name="LawOfDemeter" />
+		<exclude name="LoosePackageCoupling" />
+	</rule>
+	<rule ref="category/java/errorprone.xml">
+		<exclude name="BeanMembersShouldSerialize" />
+	</rule>
+	<rule ref="category/java/multithreading.xml" />
+	<rule ref="category/java/performance.xml" />
+	<rule ref="category/java/security.xml" />
+</ruleset>
