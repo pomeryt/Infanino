@@ -10,6 +10,8 @@
 		<exclude name="AtLeastOneConstructor" />
 		<exclude name="DefaultPackage" />
 		<exclude name="CommentDefaultAccessModifier" />
+		<exclude name="UnnecessaryModifier" />
+		<exclude name="AvoidFinalLocalVariable" />
 	</rule>
 	<rule ref="category/java/design.xml">
 		<exclude name="AvoidCatchingGenericException" />
