@@ -25,7 +25,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void firstSpaceBecomesTheLengthOfIndentation_validCase() {
+	void validCaseThatFirstSpaceBecomesTheLengthOfIndentation() {
 		final String code = "first\n  second\n    thrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -34,7 +34,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void firstSpaceBecomesTheLengthOfIndentation_invalidCase() {
+	void invalidCaseThatFirstSpaceBecomesTheLengthOfIndentation() {
 		final String code = "first\n  second\n   thrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -43,7 +43,7 @@ final class IndentationValidityTest {
 	}
 
 	@Test
-	void tabCanBeUsedToDetermineTheLengthOfIndentation_validCase() {
+	void validCaseThatTabCanBeUsedToDetermineTheLengthOfIndentation() {
 		final String code = "first\n\tsecond\n\t\tthrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -52,7 +52,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void tabCanBeUsedToDetermineTheLengthOfIndentation_invalidCase() {
+	void invalidCaseThatTabCanBeUsedToDetermineTheLengthOfIndentation() {
 		final String code = "first\n\tsecond\n\t\t thrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -61,7 +61,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void shouldNotIndentTwiceAtATime() {
+	void shouldNotIndentMoreThanOnceAtATime() {
 		final String code = "a\n b\n   c";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
