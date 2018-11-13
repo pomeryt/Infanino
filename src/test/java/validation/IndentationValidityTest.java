@@ -1,9 +1,12 @@
 package validation;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.TooManyMethods")
 final class IndentationValidityTest {
 
 	@Test
@@ -98,6 +101,28 @@ final class IndentationValidityTest {
 				new IndentationValidity(code).reason(), 
 				CoreMatchers.equalTo("Please check the indentation.")
 			);
+		}
+	}
+	
+	@Test
+	void shouldThrowWhenObtainReasonForValidCase() {
+		final String code = "one\n\ttwo\n\tthree";
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			assertThrows(IllegalStateException.class, () -> indentation.reason());
+		} else {
+			throw new IllegalStateException("The indentation should be valid.");
+		}
+	}
+	
+	@Test
+	void shouldThrowWhenObtainLineForValidCase() {
+		final String code = "one\n two\n three";
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			assertThrows(IllegalStateException.class, () -> indentation.line());
+		} else { 
+			throw new IllegalStateException("The indentation should be valid.");
 		}
 	}
 }
