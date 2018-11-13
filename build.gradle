@@ -29,7 +29,7 @@ test {
 
     // Show test results.
     testLogging {
-        events 'passed', 'skipped', 'failed'
+        events 'skipped', 'failed'
         exceptionFormat = 'full'
     }
     
