@@ -72,18 +72,32 @@ final class IndentationValidityTest {
 	@Test
 	void shouldGiveLineNumberWhenInvalid() {
 		final String code = "one\ntwo\n three\n  four\n    five";
-		MatcherAssert.assertThat(
-			new IndentationValidity(code).line(), 
-			CoreMatchers.equalTo(5)
-		);
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			throw new IllegalStateException(
+				"It was valid when it shouldn't be."
+			);
+		} else {
+			MatcherAssert.assertThat(
+				indentation.line(), 
+				CoreMatchers.equalTo(5)
+			);
+		}
 	}
 	
 	@Test
 	void shouldGiveReasonWhenInvalid() {
 		final String code = "uno\n dos\n   tres";
-		MatcherAssert.assertThat(
-			new IndentationValidity(code).reason(), 
-			CoreMatchers.equalTo("Please check indentation.")
-		);
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			throw new IllegalStateException(
+				"It was valid when it shouldn't be."
+			);
+		} else {
+			MatcherAssert.assertThat(
+				new IndentationValidity(code).reason(), 
+				CoreMatchers.equalTo("Please check the indentation.")
+			);
+		}
 	}
 }
