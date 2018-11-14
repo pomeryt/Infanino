@@ -1,9 +1,12 @@
 package validation;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.TooManyMethods")
 final class IndentationValidityTest {
 
 	@Test
@@ -72,18 +75,54 @@ final class IndentationValidityTest {
 	@Test
 	void shouldGiveLineNumberWhenInvalid() {
 		final String code = "one\ntwo\n three\n  four\n    five";
-		MatcherAssert.assertThat(
-			new IndentationValidity(code).line(), 
-			CoreMatchers.equalTo(5)
-		);
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			throw new IllegalStateException(
+				"It was valid when it shouldn't be."
+			);
+		} else {
+			MatcherAssert.assertThat(
+				indentation.line(), 
+				CoreMatchers.equalTo(5)
+			);
+		}
 	}
 	
 	@Test
 	void shouldGiveReasonWhenInvalid() {
 		final String code = "uno\n dos\n   tres";
-		MatcherAssert.assertThat(
-			new IndentationValidity(code).reason(), 
-			CoreMatchers.equalTo("Please check indentation.")
-		);
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			throw new IllegalStateException(
+				"It was valid when it shouldn't be."
+			);
+		} else {
+			MatcherAssert.assertThat(
+				new IndentationValidity(code).reason(), 
+				CoreMatchers.equalTo("Please check the indentation.")
+			);
+		}
+	}
+	
+	@Test
+	void shouldThrowWhenObtainReasonForValidCase() {
+		final String code = "one\n\ttwo\n\tthree";
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			assertThrows(IllegalStateException.class, () -> indentation.reason());
+		} else {
+			throw new IllegalStateException("The indentation should be valid.");
+		}
+	}
+	
+	@Test
+	void shouldThrowWhenObtainLineForValidCase() {
+		final String code = "one\n two\n three";
+		final Validation indentation = new IndentationValidity(code);
+		if (indentation.valid()) {
+			assertThrows(IllegalStateException.class, () -> indentation.line());
+		} else { 
+			throw new IllegalStateException("The indentation should be valid.");
+		}
 	}
 }
