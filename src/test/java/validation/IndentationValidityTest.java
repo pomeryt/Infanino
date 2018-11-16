@@ -98,7 +98,7 @@ final class IndentationValidityTest {
 			);
 		} else {
 			MatcherAssert.assertThat(
-				new IndentationValidity(code).reason(), 
+				indentation.reason(), 
 				CoreMatchers.equalTo("Please check the indentation.")
 			);
 		}
