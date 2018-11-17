@@ -125,4 +125,13 @@ final class IndentationValidityTest {
 			throw new IllegalStateException("The indentation should be valid.");
 		}
 	}
+	
+	@Test
+	void shouldPassAngleBracketShapedIndentationPattern() {
+		final String code = "one\n\ttwo\n\t\tthree\n\ttwo\none";
+		MatcherAssert.assertThat(
+			new IndentationValidity(code).valid(), 
+			CoreMatchers.equalTo(true)
+		);
+	}
 }
