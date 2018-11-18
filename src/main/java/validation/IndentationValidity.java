@@ -16,50 +16,50 @@ public final class IndentationValidity implements Validation {
 	
 	@Override
 	public boolean valid() {
-		this.lines = code.split("\n");   	// code split
-		this.lineLength = this.lines.length;	
+		final String[] lines = this.code.split("\n");   	// code split
 		
-		calcIndentUnit();			// Calculate Base Indent
-		
-		if(firstLineHaveIndent()) {				// first line doesn't have indent
-			setError("First line should not have indentation", 1);
+		if(this.firstLineHaveIndent(lines[0])) {				// first line doesn't have indent
+			this.setError("First line should not have indentation", 1);
 			this.validity = false;
 			return false;
 		}
 		final Stack<Integer> stack = new Stack<Integer>();
+		final int codeLength = lines.length;	
+		final int indentLineNum = this.firstIndentLineNum(lines,codeLength);
+		final char indentType = this.indentType(lines, indentLineNum);
+		final char invaldType = (indentType == spaceBar)? tab:spaceBar;
 		
-		for (int currentLine=0;currentLine<this.lineLength;currentLine++) {	
+		for (int currentLine=0;currentLine<codeLength;currentLine++) {	
 			
-			final IndentAmount amount = this.indentAmount(lines[currentLine]);	
+			final IndentAmount amount = this.indentAmount(lines[currentLine], indentType);	
 			
-			if(!amount.valid()) {					
-				setError("Indentation Type Miss Match", currentLine+1);
+			if(!amount.valid()) {
+				 
+				this.setError("Indentation mismatched.\n" + 
+						"Expected: " +indentType+ 
+						"\nActual: "+invaldType, currentLine+1);
 				this.validity = false;
 				return false;
 			} 
 			
 			final int currentIndent = amount.value();
+			
 			if(stack.isEmpty()) {
 				stack.addElement(currentIndent);
-			}else{
-				while(currentIndent<stack.lastElement()) {
-					stack.pop();
-					
-				}
-				
-				if(currentIndent>stack.lastElement()) {
-					if(currentIndent - this.baseIndent != stack.lastElement()) {
-						setError("Please check the indentation.", currentLine+1);
-						this.validity =false;
-						return false;
-					}
-						
-					stack.addElement(currentIndent);
-					
-				}
-				
+				continue;
 			}
-				
+			
+			while(currentIndent<stack.lastElement()) {
+				stack.pop();
+			}
+			if(currentIndent==stack.lastElement()) {continue;}
+			final int baseIndent = this.calcIndentUnit(lines, codeLength, indentLineNum, indentType);			// Calculate Base Indent
+			if(currentIndent - baseIndent != stack.lastElement()) {
+				this.setError("Please check the indentation.", currentLine+1);
+				this.validity =false;
+				return false;
+			}
+			stack.addElement(currentIndent);
 			
 		}
 		return this.validity;
@@ -67,7 +67,7 @@ public final class IndentationValidity implements Validation {
 	@Override
 	public int line() {
 		if(this.validity) {
-			throw new IllegalStateException("The indentation should be valid.");
+			throw new IllegalStateException("This method can be used when the indentation is invalid.");
 		}else {
 			return this.errorLine;			
 		}
@@ -75,29 +75,29 @@ public final class IndentationValidity implements Validation {
 	@Override
 	public String reason() {
 		if(this.validity) {
-			throw new IllegalStateException("The indentation should be valid.");
+			throw new IllegalStateException("This method can be used when the indentation is invalid.");
 		} else {
 			return this.errorMsg;
 		}
 	}
-	private boolean firstLineHaveIndent() {
+	private boolean firstLineHaveIndent(final String line) {
 		final Pattern pattern = Pattern.compile(this.indentPattern);	
-		final Matcher matcher = pattern.matcher(this.lines[0]);
+		final Matcher matcher = pattern.matcher(line);
 		return matcher.find();
 	}
 	
-	private int firstIndentLine() {
+	private int firstIndentLineNum(final String[] lines, final int lineLength) {
 		int currentLine = 0;  
 		final Pattern pattern = Pattern.compile(this.indentPattern);
 		Matcher matcher ;
 		do{
 			
 			currentLine++;
-			if(currentLine>=this.lineLength) {
-				this.baseIndent = 0;
+			if(currentLine>=lineLength) {
+				currentLine =0;
 				break;
 			}
-			matcher = pattern.matcher(this.lines[currentLine]);
+			matcher = pattern.matcher(lines[currentLine]);
 			
 		}while(!matcher.find());
 		 
@@ -106,56 +106,50 @@ public final class IndentationValidity implements Validation {
 	}
 	
 	
-	private char type(final int indentLine) {
-		if(this.lines[indentLine].charAt(0) == this.spaceBar) {
-			this.indentType = this.spaceBar;
+	private char indentType(final String[] lines, final int indentLine) {
+		if(lines[indentLine].charAt(0) == this.spaceBar) {
 			return this.spaceBar;
-		} else if(this.lines[indentLine].charAt(0) == this.tab) {
-			this.indentType = this.tab;
+		} else if(lines[indentLine].charAt(0) == this.tab) {
 			return this.tab;
 		} else {
 			throw new IllegalStateException("Expected indentation: space bar or tab."
-					+ "Actual indentation: "+this.lines[indentLine].charAt(0));
+					+ "Actual indentation: "+lines[indentLine].charAt(0));
 			
 		}
 	}
-	private void calcIndentUnit()  {
-		int indent= 0;
-		int indentLine = 0;
-		indentLine = firstIndentLine();
+	private int calcIndentUnit(final String[] lines,final int lineLength,final int indentLineNum,final char indentType)  {
+		int indentCharIndex= 0;
 		
+		if(indentLineNum<lineLength) { // Indent Line found is less than line length.
 		
-		if(indentLine<this.lineLength) { // Indent Line found is less than line length.
-		
-			type(indentLine);
+			this.indentType(lines, indentLineNum);
 			
-			while(this.lines[indentLine].charAt(indent) == this.indentType){ indent++; }
-			
-			this.baseIndent = indent;
+			while(lines[indentLineNum].charAt(indentCharIndex) == indentType){ indentCharIndex++; }
+
 		}
+		return indentCharIndex;
 	}
 	
 	
-	private IndentAmount indentAmount(final String line) {
-		char indentTypeR = this.spaceBar;
-		if(this.indentType == this.spaceBar) {
-			indentTypeR = this.tab;
+	private IndentAmount indentAmount(final String line,final char indentType) {
+		char invalidType = this.spaceBar;
+		if(indentType == this.spaceBar) {
+			invalidType = this.tab;
 		}
 		
-		int indentAmount=0;
-		
-		if(line.charAt(indentAmount) == indentTypeR) {return new InvalidIndent();}
-		
-		while(line.charAt(indentAmount) == this.indentType) {
+		int indentAmount=-1;
+			
+		do{
 			indentAmount++;
-			if(line.charAt(indentAmount) == indentTypeR) {
+			if(line.charAt(indentAmount) == invalidType) {
 				
-				return new InvalidIndent();
+				return new InvalidIndent(indentType,invalidType);
 			}
-		}
+		}while(line.charAt(indentAmount) == indentType); 
 		
 		return new ValidIndent(indentAmount);
 	}
+	
 	private void setError(final String errorMsg,final int errorLine) {
 		this.errorMsg = errorMsg;
 		this.errorLine = errorLine;
@@ -182,7 +176,11 @@ public final class IndentationValidity implements Validation {
 		final int amount;
 	}
 	private static class InvalidIndent implements IndentAmount{
-
+			
+		public InvalidIndent(final char expectType,final char actualType) {
+			this.expectType = expectType;
+			this.actualType = actualType;
+		}
 		@Override
 		public boolean valid() {
 		
@@ -192,24 +190,21 @@ public final class IndentationValidity implements Validation {
 		@Override
 		public int value() {
 			
-			throw new IllegalStateException("Indent type miss match");
+			throw new IllegalStateException("Indentation mismatched.\n" + 
+					"Expected: " +this.expectType+ 
+					"\nActual: "+this.actualType);
 		}
-		
+		final private char expectType;
+		final private char actualType;
 	}
 		
-	private char indentType;
-	private int baseIndent;
 	private int errorLine;
 	private String errorMsg;
-	private boolean validity = true;;
-	private  int lineLength;
-	private String[] lines;
-	
+	private boolean validity = true;
+		
 	private final char spaceBar = ' ';
 	private final char tab = '\t';
-	
 	private final String code;
-	
 	private final String indentPattern = "^\\s+[a-zA-Z0-9]+$"; 
 	
 	
