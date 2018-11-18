@@ -134,4 +134,13 @@ final class IndentationValidityTest {
 			CoreMatchers.equalTo(true)
 		);
 	}
+	
+	@Test
+	void shouldPassNoIndentedCode() {
+		final String code = "one\ntwo\nthree";
+		MatcherAssert.assertThat(
+			new IndentationValidity(code).valid(), 
+			CoreMatchers.equalTo(true)
+		);
+	}
 }
