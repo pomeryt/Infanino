@@ -18,12 +18,12 @@ public final class IndentationValidity implements Validation {
 	
 	@Override
 	public boolean valid() {
-		final Pattern patternFirstSpace = Pattern.compile(nonSpacePattern);	
-		final Matcher matcher = patternFirstSpace.matcher(part[0]);
+		
 		calIndentNum();			// Calculate Base Indent
 		final Stack<Integer> stack = new Stack<Integer>();
-		if(matcher.find()) {				// first line doesn't have indent
-			for (int i=1;i<codeLine;i++) {	
+		
+		if(isNonSpaceFirstLine()) {				// first line doesn't have indent
+			for (int i=0;i<codeLine;i++) {	
 				
 				final int num = getIndent(part[i]);	
 				
@@ -33,30 +33,11 @@ public final class IndentationValidity implements Validation {
 					return false;
 				}
 				
-				if(stack.isEmpty()) {
-					stack.addElement(num);
-				}
-				else {
-					while(num<stack.lastElement()) {
-						stack.pop();
-					}
-					if(num>stack.lastElement()) {
-						if(num - indent == stack.lastElement()) {
-							stack.addElement(num);
-						}
-						else {
-							setError("Please check the indentation.", i+1);
-							validity =false;
-							return false;
-						}
-					}
-					else if(num==stack.lastElement()) {
-						continue;
-					}
-				}
+				if(compareIndentNum(stack, num,i)) {continue;}
+				else {return false;}
+				
 			}
-		}
-		else {
+		} else {
 			
 			setError("First Line Do Not Has Indentation", 1);
 			validity = false;
@@ -65,17 +46,14 @@ public final class IndentationValidity implements Validation {
 	
 		return validity;
 	}
-
 	@Override
 	public int line() {
 		if(validity) {
 			throw new IllegalStateException();
-		}
-		else {
+		}else {
 			return errorLine;			
 		}
 	}
-
 	@Override
 	public String reason() {
 		if(validity) {
@@ -85,105 +63,120 @@ public final class IndentationValidity implements Validation {
 			return error;
 		}
 	}
+	private boolean isNonSpaceFirstLine() {
+		final Pattern patternFirstSpace = Pattern.compile(nonSpacePattern);	
+		final Matcher matcher = patternFirstSpace.matcher(part[0]);
+		return matcher.find();
+	}
+	private int findIndentLine() {
+		int currentLine = 0;  
+		final Pattern spacePattern = Pattern.compile(spacePatternRegex);
+		Matcher matcher = spacePattern.matcher(part[currentLine]);
+		do{
+			
+			currentLine++;
+			if(currentLine>=codeLine) {
+				indentLength = 0;
+				break;
+			}
+			matcher = spacePattern.matcher(part[currentLine]);
+			
+		}while(!matcher.find());
+		 
+		 
+		return currentLine;
+	}
+	private char checkType(final int indentLine) {
+		if(part[indentLine].charAt(0) == space) {
+			indentType = space;
+			return space;
+		}
+		else if(part[indentLine].charAt(0) == tab) {
+			indentType = tab;
+			return tab;
+		}
+		return '\0';
+	}
 	private void calIndentNum() {
-		
 		int indent= 0;
-		int index = 1;  // second line start
-		if(index >= codeLine) {
-			this.indent = indent;
-			return;
-		}
-		final Pattern pattern = Pattern.compile(spacePattern);
-		Matcher matcher = pattern.matcher(part[index]);
+		int indentLine = 0;
+		indentLine = findIndentLine();
 		
-		while(!matcher.find()) {
+		
+		if(indentLine<codeLine) { 
+		
+			checkType(indentLine);
 			
-			index++;
-			if(index>=codeLine) {
-				this.indent = indent;
-				return;
-			}
-			matcher = pattern.matcher(part[index]);
+			while(part[indentLine].charAt(indent) == indentType){ indent++; }
 			
+			this.indentLength = indent;
 		}
-		int pos=0;
-
-		if(part[index].charAt(0) == space) {
-			while(part[index].charAt(pos) == space){
-				pos++;
-				indent++;
-			}
-			checkType = "space";
-		}
-		else if(part[index].charAt(0)==tab) {
-			while(part[index].charAt(pos) == tab){
-				pos++;
-				indent++;
-			}
-			checkType = "tab";
-		}
-		this.indent = indent;
 	}
-	
+	private boolean compareIndentNum(final Stack<Integer> stack,final int num,final int lineNum) {
+		if(stack.isEmpty()) {
+			stack.addElement(num);
+		}
+		else {
+			while(num<stack.lastElement()) {
+				stack.pop();
+				
+			}
+			
+			if(num>stack.lastElement()) {
+				if(num - indentLength == stack.lastElement()) {
+					stack.addElement(num);
+				}
+				else {
+					setError("Please check the indentation.", lineNum+1);
+					validity =false;
+					return false;
+				}
+			}
+		}
+				
+		return true;
+	}
 	private int getIndent(final String part) {
-		
-		int num=0;
-		int pos=0;
-		
-		if("space".equals(checkType)) {
-			if(part.charAt(pos) == tab) {
-				
-				return -1;
-			}
-			
-			while(part.charAt(pos) == space) {
-				pos++;
-				if(part.charAt(pos) == tab) {
-					
-					return -1;
-				}
-			}
-			num = pos;
-		}
-		else if("tab".equals(checkType)) {
-			if(part.charAt(pos) == space) {
-				
-				return -1;
-			}
-			while(part.charAt(pos)==tab) {
-				pos++;
-				if(part.charAt(pos) == space) {
-					
-					return -1;
-				}
-			}
-			num = pos;
+		char indentTypeR = space;
+		if(indentType == space) {
+			indentTypeR = tab;
 		}
 		
 		
-		return num;
+		int indent=0;
+		
+		if(part.charAt(indent) == indentTypeR) {return -1;}
+		
+		while(part.charAt(indent) == indentType) {
+			indent++;
+			if(part.charAt(indent) == indentTypeR) {
+				
+				return -1;
+			}
+		}
+		
+		return indent;
 	}
-	
 	private void setError(final String errorType,final int errorLine) {
 		error = errorType;
 		this.errorLine = errorLine;
 	}
 	
 	
-	private final String[] part;
-	private final int codeLine;
-	private String checkType;
-	private int indent;
+	
+	private char indentType;
+	private int indentLength;
 	private int errorLine;
 	private String error;
 	private boolean validity;
 	
-	
+	private final String[] part;
+	private final int codeLine;
 	private final char space = ' ';
 	private final char tab = '\t';
 	
 	private final String nonSpacePattern="^[a-zA-Z0-9]+$";
-	private final String spacePattern = "^\\s+[a-zA-Z0-9]+$"; 
+	private final String spacePatternRegex = "^\\s+[a-zA-Z0-9]+$"; 
 	
 	
 }
