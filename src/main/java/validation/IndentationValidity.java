@@ -32,7 +32,7 @@ public final class IndentationValidity implements Validation {
 		
 
 		final Stack<Integer> stack = new Stack<Integer>();
-		final char invalidType = invalidType(indentType); 
+		final char invalidType = this.invalidType(indentType); 
 				
 				
 		for (int currentLine = 0; currentLine < codeLength; currentLine++) {
@@ -151,10 +151,7 @@ public final class IndentationValidity implements Validation {
 	}
 	
 	private IndentAmount indentAmount(final String line, final char indentType) {
-		char invalidType = this.spaceBar;
-		if (indentType == this.spaceBar) {
-			invalidType = this.tab;
-		}
+		final char invalidType = this.invalidType(indentType);
 
 		int indentAmount = -1;
 
@@ -197,8 +194,8 @@ public final class IndentationValidity implements Validation {
 
 	private static class InvalidIndent implements IndentAmount {
 
-		public InvalidIndent(final char expectType, final char actualType) {
-			this.expectType = expectType;
+		public InvalidIndent(final char expectedType, final char actualType) {
+			this.expectedType = expectedType;
 			this.actualType = actualType;
 		}
 
@@ -212,10 +209,10 @@ public final class IndentationValidity implements Validation {
 		public int value() {
 
 			throw new IllegalStateException(
-					"Indentation mismatched.\n" + "Expected: " + this.expectType + "\nActual: " + this.actualType);
+					"Indentation mismatched.\n" + "Expected: " + this.expectedType + "\nActual: " + this.actualType);
 		}
 
-		final private char expectType;
+		final private char expectedType;
 		final private char actualType;
 	}
 
