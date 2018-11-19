@@ -13,9 +13,12 @@ public final class IndentationValidity implements Validation {
 	public IndentationValidity(final String code) {
 		this.code = code;
 	}
-
+	
 	@Override
 	public boolean valid() {
+		if (!this.indentExists()) {
+			return true;
+		}
 		final String[] lines = this.code.split("\n");
 
 		if (this.lineHasIndent(lines[0])) {
@@ -23,19 +26,22 @@ public final class IndentationValidity implements Validation {
 			this.validity = false;
 			return false;
 		}
-		final Stack<Integer> stack = new Stack<Integer>();
 		final int codeLength = lines.length;
 		final int indentLineNum = this.firstIndentLineNum(lines, codeLength);
 		final char indentType = this.indentType(lines, indentLineNum);
-		final char invaldType = (indentType == spaceBar) ? tab : spaceBar;
+		
 
+		final Stack<Integer> stack = new Stack<Integer>();
+		final char invalidType = invalidType(indentType); 
+				
+				
 		for (int currentLine = 0; currentLine < codeLength; currentLine++) {
 
 			final IndentAmount amount = this.indentAmount(lines[currentLine], indentType);
 
 			if (!amount.valid()) {
 
-				this.setError("Indentation mismatched.\n" + "Expected: " + indentType + "\nActual: " + invaldType,
+				this.setError("Indentation mismatched.\n" + "Expected: " + indentType + "\nActual: " + invalidType,
 						currentLine + 1);
 				this.validity = false;
 				return false;
@@ -89,6 +95,12 @@ public final class IndentationValidity implements Validation {
 		final Matcher matcher = pattern.matcher(line);
 		return matcher.find();
 	}
+	private char invalidType(final char indentType) {
+		return (indentType == spaceBar) ? tab : spaceBar;
+	}
+	private boolean indentExists() {
+		return this.code.contains(String.valueOf(spaceBar)) || this.code.contains(String.valueOf(tab));
+	}
 
 	private int firstIndentLineNum(final String[] lines, final int lineLength) {
 		int currentLine = 0;
@@ -133,7 +145,11 @@ public final class IndentationValidity implements Validation {
 
 		return indentCharIndex;
 	}
-
+	private void setError(final String errorMsg, final int errorLine) {
+		this.errorMsg = errorMsg;
+		this.errorLine = errorLine;
+	}
+	
 	private IndentAmount indentAmount(final String line, final char indentType) {
 		char invalidType = this.spaceBar;
 		if (indentType == this.spaceBar) {
@@ -152,10 +168,7 @@ public final class IndentationValidity implements Validation {
 		return new ValidIndent(indentAmount);
 	}
 
-	private void setError(final String errorMsg, final int errorLine) {
-		this.errorMsg = errorMsg;
-		this.errorLine = errorLine;
-	}
+	
 
 	private interface IndentAmount {
 		boolean valid();
