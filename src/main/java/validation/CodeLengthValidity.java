@@ -14,7 +14,7 @@ public class CodeLengthValidity implements Validation {
 
 	@Override
 	public boolean valid() {
-		final String[] lines = this.code.split("\n");
+		final String[] lines = (this.code+"end line").split("\n");
 		if (lines.length > this.lineLimit) {
 			this.validity = false;
 			return false;

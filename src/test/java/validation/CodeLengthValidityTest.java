@@ -99,5 +99,10 @@ public final class CodeLengthValidityTest {
 					CoreMatchers.equalTo("The code length is more than " + 200));
 		}
 	}
-
+	
+	@Test
+	void excessiveEmptyLinesAtEndShouldBeInvalid() {
+		final String code = "one\ntwo\nthree\n\n\n\n\n\n\n\n";
+		MatcherAssert.assertThat(new CodeLengthValidity(code, 3).valid(), CoreMatchers.equalTo(false));
+	}
 }
