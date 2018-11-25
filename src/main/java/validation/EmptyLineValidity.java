@@ -4,7 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Check if the Line is valid or not.
+ * It checks the empty lines of code.<br>
+ * The code that contains consecutive empty lines would be invalid.
  */
 public final class EmptyLineValidity implements Validation {
 	
