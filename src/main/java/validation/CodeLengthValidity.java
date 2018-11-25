@@ -7,8 +7,9 @@ package validation;
 
 public class CodeLengthValidity implements Validation {
 
-	public CodeLengthValidity(final String code) {
+	public CodeLengthValidity(final String code,final int lineLimit) {
 		this.code = code;
+		this.lineLimit = lineLimit;
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class CodeLengthValidity implements Validation {
 	@Override
 	public int line() {
 		if (this.validity) {
-			throw new IllegalStateException("The code length should be valid");
+			throw new IllegalStateException("The code should be invalid to use this method");
 		} else {
 			return this.lineLimit + 1;
 		}
@@ -34,13 +35,13 @@ public class CodeLengthValidity implements Validation {
 	@Override
 	public String reason() {
 		if (this.validity) {
-			throw new IllegalStateException("The code length should be valid");
+			throw new IllegalStateException("The code should be invalid to use this method");
 		} else {
 			return "The code length is more than " + this.lineLimit;
 		}
 	}
 
-	private final int lineLimit = 200;
+	private final int lineLimit;
 	private final String code;
 	private boolean validity;
 }
