@@ -6,6 +6,7 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class EmptyLineValidityTest {
 	@Test
 	void emptyLineIsLessThanOne() {
