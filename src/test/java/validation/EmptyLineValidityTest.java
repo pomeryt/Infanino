@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class EmptyLineValidityTest {
 	@Test
-	void emptyLineIsLessThanOne() {
+	void validIfNoConsecutiveEmptyLines() {
 		final String code = "one\n" + 
 				"two\n" + 
 				"three\n" + 
@@ -23,7 +23,7 @@ final class EmptyLineValidityTest {
 		);
 	}
 	@Test
-	void emptyLineIsLessThanOneAndHasIndent() {
+	void validIfNoConsecutiveEmptyLinesWithIndent() {
 		final String code = "one\n" + 
 				"two\n" + 
 				"three\n" + 
@@ -37,7 +37,7 @@ final class EmptyLineValidityTest {
 		);
 	}
 	@Test
-	void emptyLineIsMoreThanTwo() {
+	void invalidIfConsecutiveEmptyLines() {
 		final String code = "one\n" + 
 				"\n" + 
 				"two\n" + 
@@ -52,7 +52,7 @@ final class EmptyLineValidityTest {
 		);
 	}
 	@Test
-	void emptyLineIsMoreThanTwoAndHasIndent() {
+	void invalidIfConsecutiveEmptyLinesWithIndent() {
 		final String code = "one\n" + 
 				" \n" + 
 				"two\n" + 
