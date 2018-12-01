@@ -7,25 +7,25 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 public final class CodeLengthValidityTest {
-	final String word = "apple\n";
+	private final static String WORD = "apple\n";
 
 	@Test
-	void validIfCodeLengthLessThanLineLimit() {
+	public void validIfCodeLengthLessThanLineLimit() {
 
 		final StringBuilder code = new StringBuilder();
 		for (int i = 0; i < 199; i++) {
-			code.append(this.word);
+			code.append(WORD);
 		}
 		code.append("banana");
 		MatcherAssert.assertThat(new CodeLengthValidity(code.toString(),200).valid(), CoreMatchers.equalTo(true));
 	}
 
 	@Test
-	void shouldThrowWhenObtainLineForValidCase() {
+	public void shouldThrowWhenObtainLineForValidCase() {
 
 		final StringBuilder code = new StringBuilder();
 		for (int i = 0; i < 199; i++) {
-			code.append(this.word);
+			code.append(WORD);
 		}
 		code.append("cocoa");
 		final Validation codeLength = new CodeLengthValidity(code.toString(),200);
@@ -38,11 +38,11 @@ public final class CodeLengthValidityTest {
 	}
 
 	@Test
-	void shouldThrowWhenObtainReasonForValidCase() {
+	public void shouldThrowWhenObtainReasonForValidCase() {
 
 		final StringBuilder code = new StringBuilder();
 		for (int i = 0; i < 199; i++) {
-			code.append(this.word);
+			code.append(WORD);
 		}
 		code.append("dodoria");
 		final Validation codeLength = new CodeLengthValidity(code.toString(),200);
@@ -55,22 +55,22 @@ public final class CodeLengthValidityTest {
 	}
 
 	@Test
-	void invalidIfCodeLengthMoreThanLineLimit() {
+	public void invalidIfCodeLengthMoreThanLineLimit() {
 
 		final StringBuilder code = new StringBuilder();
 		for (int i = 0; i <= 199; i++) {
-			code.append(this.word);
+			code.append(WORD);
 		}
 		code.append("egg");
 		MatcherAssert.assertThat(new CodeLengthValidity(code.toString(),200).valid(), CoreMatchers.equalTo(false));
 	}
 
 	@Test
-	void shouldGiveLineNumberWhenInvalid() {
+	public void shouldGiveLineNumberWhenInvalid() {
 
 		final StringBuilder code = new StringBuilder();
 		for (int i = 0; i <= 199; i++) {
-			code.append(this.word);
+			code.append(WORD);
 		}
 		code.append("fire");
 		final Validation codeLength = new CodeLengthValidity(code.toString(),200);
@@ -83,11 +83,11 @@ public final class CodeLengthValidityTest {
 	}
 
 	@Test
-	void shouldGiveReasonWhenInvalid() {
+	public void shouldGiveReasonWhenInvalid() {
 
 		final StringBuilder code = new StringBuilder();
 		for (int i = 0; i <= 199; i++) {
-			code.append(this.word);
+			code.append(WORD);
 		}
 		code.append("gomen");
 		final Validation codeLength = new CodeLengthValidity(code.toString(),200);
@@ -101,7 +101,7 @@ public final class CodeLengthValidityTest {
 	}
 	
 	@Test
-	void excessiveEmptyLinesAtEndShouldBeInvalid() {
+	public void excessiveEmptyLinesAtEndShouldBeInvalid() {
 		final String code = "one\ntwo\nthree\n\n\n\n\n\n\n\n";
 		MatcherAssert.assertThat(new CodeLengthValidity(code, 3).valid(), CoreMatchers.equalTo(false));
 	}
