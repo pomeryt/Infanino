@@ -91,20 +91,20 @@ public final class IndentationValidity implements Validation {
 	}
 
 	private boolean lineHasIndent(final String line) {
-		final Pattern pattern = Pattern.compile(this.indentPattern);
+		final Pattern pattern = Pattern.compile(INDENT_PATTERN);
 		final Matcher matcher = pattern.matcher(line);
 		return matcher.find();
 	}
 	private char invalidType(final char indentType) {
-		return (indentType == spaceBar) ? tab : spaceBar;
+		return (indentType == SPACE_BAR) ? TAB : SPACE_BAR;
 	}
 	private boolean indentExists() {
-		return this.code.contains(String.valueOf(spaceBar)) || this.code.contains(String.valueOf(tab));
+		return this.code.contains(String.valueOf(SPACE_BAR)) || this.code.contains(String.valueOf(TAB));
 	}
 
 	private int firstIndentLineNum(final String[] lines, final int lineLength) {
 		int currentLine = 0;
-		final Pattern pattern = Pattern.compile(this.indentPattern);
+		final Pattern pattern = Pattern.compile(INDENT_PATTERN);
 		Matcher matcher;
 		do {
 
@@ -120,10 +120,10 @@ public final class IndentationValidity implements Validation {
 	}
 
 	private char indentType(final String[] lines, final int indentLine) {
-		if (lines[indentLine].charAt(0) == this.spaceBar) {
-			return this.spaceBar;
-		} else if (lines[indentLine].charAt(0) == this.tab) {
-			return this.tab;
+		if (lines[indentLine].charAt(0) == SPACE_BAR) {
+			return SPACE_BAR;
+		} else if (lines[indentLine].charAt(0) == TAB) {
+			return TAB;
 		} else {
 			throw new IllegalStateException(
 					"Expected indentation: space bar or tab." + "Actual indentation: " + lines[indentLine].charAt(0));
@@ -189,7 +189,7 @@ public final class IndentationValidity implements Validation {
 			return this.amount;
 		}
 
-		final int amount;
+		private final int amount;
 	}
 
 	private static class InvalidIndent implements IndentAmount {
@@ -220,9 +220,9 @@ public final class IndentationValidity implements Validation {
 	private String errorMsg;
 	private boolean validity = true;
 
-	private final char spaceBar = ' ';
-	private final char tab = '\t';
 	private final String code;
-	private final String indentPattern = "^\\s+[a-zA-Z0-9]+$";
+	private static final char SPACE_BAR = ' ';
+	private static final char TAB = '\t';
+	private static final String INDENT_PATTERN = "^\\s+[a-zA-Z0-9]+$";
 
 }
