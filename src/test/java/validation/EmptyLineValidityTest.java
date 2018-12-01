@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class EmptyLineValidityTest {
 	@Test
-	void validIfNoConsecutiveEmptyLines() {
+	public void validIfNoConsecutiveEmptyLines() {
 		final String code = "one\n" + 
 				"two\n" + 
 				"three\n" + 
@@ -23,7 +23,7 @@ final class EmptyLineValidityTest {
 		);
 	}
 	@Test
-	void validIfNoConsecutiveEmptyLinesWithIndent() {
+	public void validIfNoConsecutiveEmptyLinesWithIndent() {
 		final String code = "one\n" + 
 				"two\n" + 
 				"three\n" + 
@@ -37,7 +37,7 @@ final class EmptyLineValidityTest {
 		);
 	}
 	@Test
-	void invalidIfConsecutiveEmptyLines() {
+	public void invalidIfConsecutiveEmptyLines() {
 		final String code = "one\n" + 
 				"\n" + 
 				"two\n" + 
@@ -52,7 +52,7 @@ final class EmptyLineValidityTest {
 		);
 	}
 	@Test
-	void invalidIfConsecutiveEmptyLinesWithIndent() {
+	public void invalidIfConsecutiveEmptyLinesWithIndent() {
 		final String code = "one\n" + 
 				" \n" + 
 				"two\n" + 
@@ -67,7 +67,7 @@ final class EmptyLineValidityTest {
 		);
 	}
 	@Test
-	void shouldGiveLineNumberWhenInvalid() {
+	public void shouldGiveLineNumberWhenInvalid() {
 		final String code = "one\n" + 
 				"\n" + 
 				"two\n" + 
@@ -89,7 +89,7 @@ final class EmptyLineValidityTest {
 		}
 	}
 	@Test
-	void shouldThrowWhenObtainLineForValidCase() {
+	public void shouldThrowWhenObtainLineForValidCase() {
 		final String code = "one\n" + 
 				"two\n" + 
 				"three\n" + 
@@ -106,7 +106,7 @@ final class EmptyLineValidityTest {
 	}
 	
 	@Test
-	void shouldGiveReasonWhenInvalid() {
+	public void shouldGiveReasonWhenInvalid() {
 		final String code = "one\n" + 
 				"\n" + 
 				"two\n" + 
@@ -128,7 +128,7 @@ final class EmptyLineValidityTest {
 		}
 	}
 	@Test
-	void shouldGiveReasonWhenInvalidAndHasIndent() {
+	public void shouldGiveReasonWhenInvalidAndHasIndent() {
 		final String code = "one\n" + 
 				" \n" + 
 				"two\n" + 
@@ -150,7 +150,7 @@ final class EmptyLineValidityTest {
 		}
 	}
 	@Test
-	void shouldThrowWhenObtainReasonForValidCase() {
+	public void shouldThrowWhenObtainReasonForValidCase() {
 		final String code = "one\n" + 
 				"two\n" + 
 				"three\n" + 
