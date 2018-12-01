@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
  */
 public final class EmptyLineValidity implements Validation {
 	
-	
 	public EmptyLineValidity(final String code) {
 		this.code = code;
 	}
@@ -20,12 +19,12 @@ public final class EmptyLineValidity implements Validation {
 		final String blankPattern = "^\\s*$";
 		final Pattern pattern = Pattern.compile(blankPattern);
 		
-		for(int index=0;index<lines.length-1;index++) {
+		for (int index = 0; index < lines.length - 1; index++) {
 			final Matcher currentLine = pattern.matcher(lines[index]);
-			final Matcher nextLine = pattern.matcher(lines[index+1]);
+			final Matcher nextLine = pattern.matcher(lines[index + 1]);
 			
-			if(currentLine.find() && nextLine.find()) {
-				this.errorLine = index+1;
+			if (currentLine.find() && nextLine.find()) {
+				this.errorLine = index + 1;
 				this.validity = false;
 				this.errorMsg = "There are empty lines more than two.";
 				return false;
@@ -38,7 +37,7 @@ public final class EmptyLineValidity implements Validation {
 
 	@Override
 	public int line() {
-		if(this.validity) {
+		if (this.validity) {
 			throw new IllegalStateException("This method can be used when the Empty Line is invalid.");
 		}
 		
@@ -47,7 +46,7 @@ public final class EmptyLineValidity implements Validation {
 
 	@Override
 	public String reason() {
-		if(this.validity) {
+		if (this.validity) {
 			throw new IllegalStateException("This method can be used when the Empty Line is invalid.");
 		}
 		
@@ -57,5 +56,5 @@ public final class EmptyLineValidity implements Validation {
 	private String errorMsg;
 	private boolean validity;
 	private int errorLine;
-	final private String code;
+	private final String code;
 }
