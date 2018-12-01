@@ -5,16 +5,16 @@ package validation;
  * The code length more than line limit would be invalid.
  */
 
-public class CodeLengthValidity implements Validation {
+public final class CodeLengthValidity implements Validation {
 
-	public CodeLengthValidity(final String code,final int lineLimit) {
+	public CodeLengthValidity(final String code, final int lineLimit) {
 		this.code = code;
 		this.lineLimit = lineLimit;
 	}
 
 	@Override
 	public boolean valid() {
-		final String[] lines = (this.code+"end line").split("\n");
+		final String[] lines = (this.code + "end line").split("\n");
 		if (lines.length > this.lineLimit) {
 			this.validity = false;
 			return false;
@@ -41,7 +41,8 @@ public class CodeLengthValidity implements Validation {
 		}
 	}
 
+	private boolean validity;
+	
 	private final int lineLimit;
 	private final String code;
-	private boolean validity;
 }
