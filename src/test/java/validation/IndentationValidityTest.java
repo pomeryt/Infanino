@@ -76,6 +76,7 @@ final class IndentationValidityTest {
 	public void shouldGiveLineNumberWhenInvalid() {
 		final String code = "one\ntwo\n three\n  four\n    five";
 		final Validation indentation = new IndentationValidity(code);
+		final int invalidLineNum = 5;
 		if (indentation.valid()) {
 			throw new IllegalStateException(
 				"It was valid when it shouldn't be."
@@ -83,7 +84,7 @@ final class IndentationValidityTest {
 		} else {
 			MatcherAssert.assertThat(
 				indentation.line(), 
-				CoreMatchers.equalTo(5)
+				CoreMatchers.equalTo(invalidLineNum)
 			);
 		}
 	}
