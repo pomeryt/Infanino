@@ -115,7 +115,6 @@
         <module name="DesignForExtension"/>
         <module name="MutableException"/>
         <module name="ThrowsCount" />
-        <module name="InnerTypeLast"/>
 
         <!-- Checks for common coding problems -->
         <module name="ArrayTrailingComma"/>
@@ -124,9 +123,6 @@
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="FinalLocalVariable"/>
-        <module name="HiddenField">
-            <property name="ignoreConstructorParameter" value="true"/>
-        </module>
         <module name="IllegalInstantiation"/>
         <module name="IllegalToken"/>
         <module name="IllegalTokenText" />
@@ -147,7 +143,6 @@
         <module name="IllegalCatch"/>
         <module name="IllegalThrows"/>
         <module name="PackageDeclaration"/>
-        <module name="ReturnCount"/>
         <module name="IllegalType"/>
         <module name="ParameterAssignment"/>
         <module name="ExplicitInitialization"/>
@@ -219,7 +214,7 @@
         <module name="AnonInnerLength" />
         <module name="MethodLength"/>
         <module name="ParameterNumber">
-            <property name="max" value="3"/>
+            <property name="max" value="5"/>
         </module>
         <module name="OuterTypeNumber"/>
         <module name="MethodCount"/>
