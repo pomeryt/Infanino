@@ -10,73 +10,78 @@ import org.junit.jupiter.api.Test;
 final class EmptyLineValidityTest {
 	@Test
 	public void validIfNoConsecutiveEmptyLines() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\n" + 
-				"four\n" + 
-				"\n" + 
-				"five";
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\n"
+				+ "four\n"
+				+ "\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(true)
 		);
 	}
+	
 	@Test
 	public void validIfNoConsecutiveEmptyLinesWithIndent() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\t \n" + 
-				"four\n" + 
-				" \t\n" + 
-				"five";
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\t \n"
+				+ "four\n"
+				+ " \t\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(true)
 		);
 	}
+	
 	@Test
 	public void invalidIfConsecutiveEmptyLines() {
-		final String code = "one\n" + 
-				"\n" + 
-				"two\n" + 
-				"\n" + 
-				"\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+		final String code = "one\n"
+				+ "\n"
+				+ "two\n"
+				+ "\n"
+				+ "\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(false)
 		);
 	}
+	
 	@Test
 	public void invalidIfConsecutiveEmptyLinesWithIndent() {
-		final String code = "one\n" + 
-				" \n" + 
-				"two\n" + 
-				"\t \n" + 
-				" \t\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+		final String code = "one\n"
+				+ " \n"
+				+ "two\n"
+				+ "\t \n"
+				+ " \t\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(false)
 		);
 	}
+	
 	@Test
 	public void shouldGiveLineNumberWhenInvalid() {
-		final String code = "one\n" + 
-				"\n" + 
-				"two\n" + 
-				"\n" + 
-				"\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+		final String code = "one\n"
+				+ "\n"
+				+ "two\n"
+				+ "\n"
+				+ "\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
+		final int invalidLineNum = 4;
 		if (lineEmpty.valid()) {
 			throw new IllegalStateException(
 				"It was valid when it shouldn't be."
@@ -84,19 +89,20 @@ final class EmptyLineValidityTest {
 		} else {
 			MatcherAssert.assertThat(
 				lineEmpty.line(), 
-				CoreMatchers.equalTo(4)
+				CoreMatchers.equalTo(invalidLineNum)
 			);
 		}
 	}
+	
 	@Test
 	public void shouldThrowWhenObtainLineForValidCase() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\n" + 
-				"four\n" + 
-				"\n" + 
-				"five";
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\n"
+				+ "four\n"
+				+ "\n"
+				+ "five";
 		final Validation lineEmpty = new IndentationValidity(code);
 		if (lineEmpty.valid()) {
 			assertThrows(IllegalStateException.class, () -> lineEmpty.line());
@@ -107,14 +113,14 @@ final class EmptyLineValidityTest {
 	
 	@Test
 	public void shouldGiveReasonWhenInvalid() {
-		final String code = "one\n" + 
-				"\n" + 
-				"two\n" + 
-				"\n" + 
-				"\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+		final String code = "one\n"
+				+ "\n"
+				+ "two\n"
+				+ "\n"
+				+ "\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
 		if (lineEmpty.valid()) {
 			throw new IllegalStateException(
@@ -127,16 +133,17 @@ final class EmptyLineValidityTest {
 			);
 		}
 	}
+	
 	@Test
 	public void shouldGiveReasonWhenInvalidAndHasIndent() {
-		final String code = "one\n" + 
-				" \n" + 
-				"two\n" + 
-				"\t\n" + 
-				" \t\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+		final String code = "one\n"
+				+ " \n"
+				+ "two\n"
+				+ "\t\n"
+				+ " \t\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
 		if (lineEmpty.valid()) {
 			throw new IllegalStateException(
@@ -149,15 +156,16 @@ final class EmptyLineValidityTest {
 			);
 		}
 	}
+	
 	@Test
 	public void shouldThrowWhenObtainReasonForValidCase() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\n" + 
-				"four\n" + 
-				"\n" + 
-				"five";
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\n"
+				+ "four\n"
+				+ "\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
 		if (lineEmpty.valid()) {
 			assertThrows(IllegalStateException.class, () -> lineEmpty.reason());
