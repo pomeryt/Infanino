@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 final class IndentationValidityTest {
 
 	@Test
-	void firstLineShouldNotStartWithSpace() {
+	public void firstLineShouldNotStartWithSpace() {
 		final String code = " apple";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -19,7 +19,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void firstLineShouldNotStartWithTab() {
+	public void firstLineShouldNotStartWithTab() {
 		final String code = "\tapple";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -28,7 +28,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void validCaseThatFirstSpaceBecomesTheLengthOfIndentation() {
+	public void validCaseThatFirstSpaceBecomesTheLengthOfIndentation() {
 		final String code = "first\n  second\n    thrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -37,7 +37,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void invalidCaseThatFirstSpaceBecomesTheLengthOfIndentation() {
+	public void invalidCaseThatFirstSpaceBecomesTheLengthOfIndentation() {
 		final String code = "first\n  second\n   thrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -46,7 +46,7 @@ final class IndentationValidityTest {
 	}
 
 	@Test
-	void validCaseThatTabCanBeUsedToDetermineTheLengthOfIndentation() {
+	public void validCaseThatTabCanBeUsedToDetermineTheLengthOfIndentation() {
 		final String code = "first\n\tsecond\n\t\tthrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -55,7 +55,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void invalidCaseThatTabCanBeUsedToDetermineTheLengthOfIndentation() {
+	public void invalidCaseThatTabCanBeUsedToDetermineTheLengthOfIndentation() {
 		final String code = "first\n\tsecond\n\t\t thrid";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -64,7 +64,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void shouldNotIndentMoreThanOnceAtATime() {
+	public void shouldNotIndentMoreThanOnceAtATime() {
 		final String code = "a\n b\n   c";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -73,9 +73,10 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void shouldGiveLineNumberWhenInvalid() {
+	public void shouldGiveLineNumberWhenInvalid() {
 		final String code = "one\ntwo\n three\n  four\n    five";
 		final Validation indentation = new IndentationValidity(code);
+		final int invalidLineNum = 5;
 		if (indentation.valid()) {
 			throw new IllegalStateException(
 				"It was valid when it shouldn't be."
@@ -83,13 +84,13 @@ final class IndentationValidityTest {
 		} else {
 			MatcherAssert.assertThat(
 				indentation.line(), 
-				CoreMatchers.equalTo(5)
+				CoreMatchers.equalTo(invalidLineNum)
 			);
 		}
 	}
 	
 	@Test
-	void shouldGiveReasonWhenInvalid() {
+	public void shouldGiveReasonWhenInvalid() {
 		final String code = "uno\n dos\n   tres";
 		final Validation indentation = new IndentationValidity(code);
 		if (indentation.valid()) {
@@ -105,7 +106,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void shouldThrowWhenObtainReasonForValidCase() {
+	public void shouldThrowWhenObtainReasonForValidCase() {
 		final String code = "one\n\ttwo\n\tthree";
 		final Validation indentation = new IndentationValidity(code);
 		if (indentation.valid()) {
@@ -116,7 +117,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void shouldThrowWhenObtainLineForValidCase() {
+	public void shouldThrowWhenObtainLineForValidCase() {
 		final String code = "one\n two\n three";
 		final Validation indentation = new IndentationValidity(code);
 		if (indentation.valid()) {
@@ -127,7 +128,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void shouldPassAngleBracketShapedIndentationPattern() {
+	public void shouldPassAngleBracketShapedIndentationPattern() {
 		final String code = "one\n\ttwo\n\t\tthree\n\ttwo\none";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 
@@ -136,7 +137,7 @@ final class IndentationValidityTest {
 	}
 	
 	@Test
-	void shouldPassNoIndentedCode() {
+	public void shouldPassNoIndentedCode() {
 		final String code = "one\ntwo\nthree";
 		MatcherAssert.assertThat(
 			new IndentationValidity(code).valid(), 

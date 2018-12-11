@@ -9,74 +9,79 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class EmptyLineValidityTest {
 	@Test
-	void validIfNoConsecutiveEmptyLines() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\n" + 
-				"four\n" + 
-				"\n" + 
-				"five";
+	public void validIfNoConsecutiveEmptyLines() {
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\n"
+				+ "four\n"
+				+ "\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(true)
 		);
 	}
+	
 	@Test
-	void validIfNoConsecutiveEmptyLinesWithIndent() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\t \n" + 
-				"four\n" + 
-				" \t\n" + 
-				"five";
+	public void validIfNoConsecutiveEmptyLinesWithIndent() {
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\t \n"
+				+ "four\n"
+				+ " \t\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(true)
 		);
 	}
+	
 	@Test
-	void invalidIfConsecutiveEmptyLines() {
-		final String code = "one\n" + 
-				"\n" + 
-				"two\n" + 
-				"\n" + 
-				"\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+	public void invalidIfConsecutiveEmptyLines() {
+		final String code = "one\n"
+				+ "\n"
+				+ "two\n"
+				+ "\n"
+				+ "\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(false)
 		);
 	}
+	
 	@Test
-	void invalidIfConsecutiveEmptyLinesWithIndent() {
-		final String code = "one\n" + 
-				" \n" + 
-				"two\n" + 
-				"\t \n" + 
-				" \t\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+	public void invalidIfConsecutiveEmptyLinesWithIndent() {
+		final String code = "one\n"
+				+ " \n"
+				+ "two\n"
+				+ "\t \n"
+				+ " \t\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		MatcherAssert.assertThat(
 			new EmptyLineValidity(code).valid(), 
 			CoreMatchers.equalTo(false)
 		);
 	}
+	
 	@Test
-	void shouldGiveLineNumberWhenInvalid() {
-		final String code = "one\n" + 
-				"\n" + 
-				"two\n" + 
-				"\n" + 
-				"\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+	public void shouldGiveLineNumberWhenInvalid() {
+		final String code = "one\n"
+				+ "\n"
+				+ "two\n"
+				+ "\n"
+				+ "\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
+		final int invalidLineNum = 4;
 		if (lineEmpty.valid()) {
 			throw new IllegalStateException(
 				"It was valid when it shouldn't be."
@@ -84,19 +89,20 @@ final class EmptyLineValidityTest {
 		} else {
 			MatcherAssert.assertThat(
 				lineEmpty.line(), 
-				CoreMatchers.equalTo(4)
+				CoreMatchers.equalTo(invalidLineNum)
 			);
 		}
 	}
+	
 	@Test
-	void shouldThrowWhenObtainLineForValidCase() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\n" + 
-				"four\n" + 
-				"\n" + 
-				"five";
+	public void shouldThrowWhenObtainLineForValidCase() {
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\n"
+				+ "four\n"
+				+ "\n"
+				+ "five";
 		final Validation lineEmpty = new IndentationValidity(code);
 		if (lineEmpty.valid()) {
 			assertThrows(IllegalStateException.class, () -> lineEmpty.line());
@@ -106,15 +112,15 @@ final class EmptyLineValidityTest {
 	}
 	
 	@Test
-	void shouldGiveReasonWhenInvalid() {
-		final String code = "one\n" + 
-				"\n" + 
-				"two\n" + 
-				"\n" + 
-				"\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+	public void shouldGiveReasonWhenInvalid() {
+		final String code = "one\n"
+				+ "\n"
+				+ "two\n"
+				+ "\n"
+				+ "\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
 		if (lineEmpty.valid()) {
 			throw new IllegalStateException(
@@ -127,16 +133,17 @@ final class EmptyLineValidityTest {
 			);
 		}
 	}
+	
 	@Test
-	void shouldGiveReasonWhenInvalidAndHasIndent() {
-		final String code = "one\n" + 
-				" \n" + 
-				"two\n" + 
-				"\t\n" + 
-				" \t\n" + 
-				"three\n" + 
-				"four\n" + 
-				"five";
+	public void shouldGiveReasonWhenInvalidAndHasIndent() {
+		final String code = "one\n"
+				+ " \n"
+				+ "two\n"
+				+ "\t\n"
+				+ " \t\n"
+				+ "three\n"
+				+ "four\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
 		if (lineEmpty.valid()) {
 			throw new IllegalStateException(
@@ -149,15 +156,16 @@ final class EmptyLineValidityTest {
 			);
 		}
 	}
+	
 	@Test
-	void shouldThrowWhenObtainReasonForValidCase() {
-		final String code = "one\n" + 
-				"two\n" + 
-				"three\n" + 
-				"\n" + 
-				"four\n" + 
-				"\n" + 
-				"five";
+	public void shouldThrowWhenObtainReasonForValidCase() {
+		final String code = "one\n"
+				+ "two\n"
+				+ "three\n"
+				+ "\n"
+				+ "four\n"
+				+ "\n"
+				+ "five";
 		final Validation lineEmpty = new EmptyLineValidity(code);
 		if (lineEmpty.valid()) {
 			assertThrows(IllegalStateException.class, () -> lineEmpty.reason());

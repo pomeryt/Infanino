@@ -7,17 +7,17 @@ package validation;
 public interface Validation {
 	/**
 	 * Check if the code is valid or not.
-	 * @return validity.
+	 * @return Validity.
 	 */
 	boolean valid();
 	
 	/**
-	 * @return line number of invalid code.
+	 * @return Line number of invalid code.
 	 */
 	int line();
 	
 	/**
-	 * @return reason why the code is invalid.
+	 * @return Reason why the code is invalid.
 	 */
 	String reason();
 }
