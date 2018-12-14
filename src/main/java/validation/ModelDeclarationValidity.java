@@ -89,7 +89,7 @@ public final class ModelDeclarationValidity implements Validation {
 
     private final String code;
 
-    private static final String FIRST_CHARACTER_CAPTIAL_PATTERN = "^\\s*[A-Z][A-Za-z0-9]*model$";
+    private static final String FIRST_CHARACTER_CAPTIAL_PATTERN = "^\\s*[A-Z][A-Za-z0-9]*\\smodel$";
     private static final String ONE_SPACEBAR_BEFORE_MODEL_PATTERN = "^\\s*[A-Za-z0-9]+\\smodel$";
     private static final String ONLY_BLANK_BEFORE_MODEL_PATTERN = "^\\s*model$";
     private static final String NOTHING_AFTER_MODEL_PATTERN = "^([\\S\\s]*\\s+|\\s?)model$";
