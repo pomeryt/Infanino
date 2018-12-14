@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("PMD.TooManyMethods")
 final class ModelDeclarationValidityTest {
-    private final static String THROW_MESSAGE ="It was valid when it shouldn't be.";
+    private static final String THROW_MESSAGE = "It was valid when it shouldn't be.";
     @Test
     public void validCaseModelDeclaration() {
         final String code = "User model\n  It has id in Int\n  It prints name";
