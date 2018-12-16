@@ -85,6 +85,20 @@
     </module>
 
     <!--
+    Multithreading checks
+    -->
+    <module name="RegexpSingleline">
+        <property name="format" value="synchronized +\(this\) +\{"/>
+        <property name="fileExtensions" value="java"/>
+        <property name="message" value="Using THIS as a lock is a bad practice (use class variable instead)"/>
+    </module>
+    <module name="RegexpSingleline">
+        <property name="format" value="synchronized +\([\w\.]\.class\) +\{"/>
+        <property name="fileExtensions" value="java"/>
+        <property name="message" value="Using class as a lock is a bad practice (use class variable instead)"/>
+    </module>
+
+    <!--
     Enable suppressions
     -->
     <module name="TreeWalker">
